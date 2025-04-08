@@ -38,9 +38,10 @@ Scopul acestei teme este de a implementa, folosindu-va de Kubernetes si de difer
 - Am creat `Dockerfile.mysql` care identifica componenta unica de mysql. *(Baza de date cu care comunica serviciul de joomla)*
 - Apoi pentru a le combina intr-un singur serviciu mare, am creat `docker-compose.yaml` in care am combinat aceste 2 servicii intr-o componenta unica de restul proiectului. Astfel pot administra mai usor aceasta *componenta* pentru a o duce in productie.
 
-
+❗❗❗ Am creat o diagrama pentru a intelege fluxul de acum + ce urmeaza sa fac cu sistemul de chat: [CMS + CHAT diagram explenation](https://excalidraw.com/#json=gqDPGHmof0GB98HKgKOn1,Pykh11mpzHvlC_2jMmdGyA)
 
 ### 3. Implementarea chat-ului 📌
+
 ### 4. Implementarea aplicatiei IA 📌
 ### 5. Configurare kubernetes 📌
 ### 6. Testare 📌
