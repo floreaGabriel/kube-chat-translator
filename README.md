@@ -32,10 +32,13 @@ Scopul acestei teme este de a implementa, folosindu-va de Kubernetes si de difer
 ### 2. Implementarea CMS-ului (Joomla) 📌
 
 - Joomla este un sistem de manageriere a contentului unui site web free. Joomla este scris in PHP si foloseste tehnici de programare orientata pe obiecte.
+- Ideea principala a web site-ului meu este o pizzerie *"Pizzeria la gabita"*
 - Pentru implementarea acestui CMS am realizat 2 componente individuale care comunica dependent una de alta. 
 - Am creat `Dockerfile.joomla` care identifica componenta unica de *joomla*.
 - Am creat `Dockerfile.mysql` care identifica componenta unica de mysql. *(Baza de date cu care comunica serviciul de joomla)*
 - Apoi pentru a le combina intr-un singur serviciu mare, am creat `docker-compose.yaml` in care am combinat aceste 2 servicii intr-o componenta unica de restul proiectului. Astfel pot administra mai usor aceasta *componenta* pentru a o duce in productie.
+
+
 
 ### 3. Implementarea chat-ului 📌
 ### 4. Implementarea aplicatiei IA 📌
