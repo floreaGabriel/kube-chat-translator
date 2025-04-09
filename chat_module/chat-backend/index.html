@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+</head>
+<body>
+    <div>
+        <input type="text" id="username" placeholder="Nume utilizator" />
+        <input type="text" id="messageInput" placeholder="Mesaj" />
+        <button id="sendButton">Trimite</button>
+    </div>
+    <div id="messages"></div>
+
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("http://localhost:88/chatHub")
+            .build();
+
+        document.getElementById("sendButton").addEventListener("click", async () => {
+            const username = document.getElementById("username").value;
+            const message = document.getElementById("messageInput").value;
+            try {
+                await connection.invoke("SendMessage", username, message);
+                document.getElementById("messageInput").value = "";
+            } catch (err) {
+                console.error(err);
+            }
+        });
+
+        connection.on("ReceiveMessage", (username, message, timestamp) => {
+            const formattedTime = new Date(timestamp).toLocaleTimeString();
+            const messageDiv = document.createElement("div");
+            messageDiv.textContent = `${formattedTime} - ${username}: ${message}`;
+            document.getElementById("messages").appendChild(messageDiv);
+        });
+
+        connection.start().catch(err => console.error(err));
+    </script>
+</body>
+</html>
