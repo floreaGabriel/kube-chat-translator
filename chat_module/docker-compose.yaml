@@ -36,7 +36,6 @@ services:
       - nginx
     networks:
       - chat-network
-
   mongodb:
     image: mongo:latest
     ports:
