@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-joomla
+spec:
+  selector:
+    matchLabels:
+      app: mysql-joomla
+  template:
+    metadata:
+      labels:
+        app: mysql-joomla
+    spec:
+      containers:
+      - name: mysql-joomla
+        image: floreagabriel/mysql-joomla:latest
+        ports:
+        - containerPort: 3306
+
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: mysql-config
+                key: MYSQL_ROOT_PASSWORD
+
+          - name: MYSQL_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: mysql-config
+                key: MYSQL_DATABASE
+
+          - name: MYSQL_USER
+            valueFrom:
+              configMapKeyRef:
+                name: mysql-config
+                key: MYSQL_USER
+                
+
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: mysql-config
+                key: MYSQL_PASSWORD

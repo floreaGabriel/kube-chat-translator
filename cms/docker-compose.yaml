@@ -12,9 +12,11 @@ services:
       - JOOMLA_DB_PASSWORD=${JOOMLA_DB_PASSWORD}
       - JOOMLA_DB_NAME=${JOOMLA_DB_NAME}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     volumes:
-      - joomla_data:/var/www/html
+      - ./joomla_data:/var/www/html
+    
   db:
     build: 
       context: .
@@ -25,7 +27,12 @@ services:
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     volumes:
-      - db_data:/var/lib/mysql
+      - ./db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "${MYSQL_USER}", "-p${MYSQL_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
   phpmyadmin:
     image: phpmyadmin
     ports:
@@ -36,7 +43,4 @@ services:
       - PMA_PASSWORD=${MYSQL_PASSWORD}
     depends_on:
       - db
-volumes:
-  joomla_data:
-  db_data:
 
