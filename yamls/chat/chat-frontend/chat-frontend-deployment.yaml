@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chat-frontend
+  template:
+    metadata:
+      labels:
+        app: chat-frontend
+    spec:
+      containers:
+      - name: chat-frontend
+        image: floreagabriel/chat-frontend
+        ports:
+        - containerPort: 90
+        env: 
+        - name: REACT_APP_API_URL
+          value: "http://localhost:30088"
+        - name: REACT_APP_SIGNALR_HUB_URL
+          value: "http://localhost:30088/chatHub"
+

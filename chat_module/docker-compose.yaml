@@ -6,7 +6,7 @@ services:
       context: ./chat-backend
       dockerfile: Dockerfile
     expose:
-      - "80"
+      - "88"
     depends_on:
       - mongodb
     environment:
@@ -41,13 +41,10 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - mongodb-data:/data/db
+      - ./mongodb-data:/data/db
     networks:
       - chat-network
 
 networks:
   chat-network:
     driver: bridge
-
-volumes:
-  mongodb-data:

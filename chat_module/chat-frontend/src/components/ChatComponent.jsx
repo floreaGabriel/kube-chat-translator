@@ -2,6 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import * as signalR from '@microsoft/signalr';
 import './ChatComponent.css';
 
+const getBaseUrl = () => {
+  const { protocol, hostname } = window.location;
+  // Presupunem că NodePort-ul pentru chat-nginx-service este 30088
+  return `${protocol}//${hostname}:30088`;
+};
+
 const ChatComponent = () => {
 
     // obtine usernameul din url
@@ -9,6 +15,9 @@ const ChatComponent = () => {
     const params = new URLSearchParams(window.location.search);
     return params.get('username');
   };
+
+  const hubUrl = `${getBaseUrl()}/chatHub`; // În loc de process.env.REACT_APP_SIGNALR_HUB_URL
+  const apiUrl = `${getBaseUrl()}`; // În loc de process.env.REACT_APP_API_URL
 
   const [username, setUsername] = useState( getUrlUsername() || '');
   const [usernameFromUrl, setUsernameFromUrl] = useState(!!getUrlUsername() || '');
@@ -20,7 +29,6 @@ const ChatComponent = () => {
 
   // Inițializarea conexiunii SignalR
   useEffect(() => {
-    const hubUrl = process.env.REACT_APP_SIGNALR_HUB_URL;
     const newConnection = new signalR.HubConnectionBuilder()
       .withUrl(hubUrl)
       .withAutomaticReconnect()
@@ -67,7 +75,6 @@ const ChatComponent = () => {
   // Obține mesajele existente de la API
   const fetchMessages = async () => {
     try {
-      const apiUrl = process.env.REACT_APP_API_URL;
       const response = await fetch(`${apiUrl}/api/chat`);
       const data = await response.json();
       const formattedMessages = data.map(msg => ({
