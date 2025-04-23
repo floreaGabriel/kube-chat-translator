@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ia-backend
+spec:
+  selector:
+    matchLabels:
+      app: ia-backend
+  template:
+    metadata:
+      labels:
+        app: ia-backend
+    spec:
+      containers:
+      - name: ia-backend
+        image: floreagabriel/ia-backend:latest
+        ports:
+        - containerPort: <Port>
