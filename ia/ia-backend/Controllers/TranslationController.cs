@@ -74,10 +74,11 @@ namespace ia_backend.Controllers
                 Console.WriteLine($"Translation completed: {translatedText}");
                 
                 // Save result
-                await _databaseService.SaveTranslationResultAsync(requestId, translatedText);
+                await _databaseService.SaveTranslationResultAsync(requestId, translatedText, "");
                 
                 // Log the save
                 Console.WriteLine($"Saved translation result for request {requestId}");
+
             }
             catch (Exception ex)
             {

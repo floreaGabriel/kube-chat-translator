@@ -39,7 +39,7 @@ namespace ia_backend.Services
             return request;
         }
 
-        public async Task SaveTranslationResultAsync(Guid requestId, string resultText, string errorMessage = null)
+        public async Task SaveTranslationResultAsync(Guid requestId, string resultText, string errorMessage)
         {
             try {
                 using var _dbContext = await _dbContextFactory.CreateDbContextAsync();

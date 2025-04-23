@@ -11,8 +11,8 @@ namespace ia_backend.Services {
 
     public class SpeechTranslationService {
 
-        private readonly string _subscriptionKey;
-        private readonly string _region;
+        private readonly string? _subscriptionKey;
+        private readonly string? _region;
 
         public SpeechTranslationService(IConfiguration configuration) {
             _subscriptionKey = configuration["AzureSpeechService:SubscriptionKey"];

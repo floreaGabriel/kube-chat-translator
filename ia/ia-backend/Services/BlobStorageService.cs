@@ -6,7 +6,7 @@ namespace ia_backend.Services {
     public class BlobStorageService {
 
         private readonly BlobServiceClient _blobServiceClient;
-        private readonly string _containerName;
+        private readonly string? _containerName;
 
         public BlobStorageService(IConfiguration configuration) {
             var connectionString = configuration["AzureblobStorage:ConnectionString"];

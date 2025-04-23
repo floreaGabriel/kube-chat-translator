@@ -22,7 +22,9 @@ builder.Services.AddScoped<DatabaseService>();
 
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowAll", builder => 
-        builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+        builder.WithOrigins(
+            "http://localhost:3000"
+        ).AllowAnyHeader().AllowAnyMethod().AllowCredentials());
 });
 
 var app = builder.Build();
@@ -30,9 +32,12 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
+} else {
+    // Utilizează redirecționarea HTTPS doar în producție
+    app.UseHttpsRedirection();
 }
 
-app.UseHttpsRedirection();
+app.UseRouting();
 app.UseCors("AllowAll");
 app.UseAuthorization();
 app.MapControllers();
