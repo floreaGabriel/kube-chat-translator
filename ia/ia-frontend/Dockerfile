@@ -1,5 +1,5 @@
-# Etapa de dezvoltare
-FROM node:20-alpine
+# Etapa de build
+FROM node:20-alpine AS build
 
 # Setează directorul de lucru
 WORKDIR /app
@@ -13,8 +13,20 @@ RUN npm ci
 # Copiază restul codului sursă
 COPY . .
 
-# Expune portul pentru dezvoltare
-EXPOSE 3000
+# Construiește aplicația pentru producție
+RUN npm run build
 
-# Pornește aplicația în modul dezvoltare pentru a face hot-reloading
-CMD ["npm", "start"]
+# Etapa de producție cu Nginx
+FROM nginx:alpine
+
+# Copiază fișierele de configurare Nginx
+COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copiază build-ul din etapa anterioară
+COPY --from=build /app/build /usr/share/nginx/html
+
+# Expune portul pentru Nginx
+EXPOSE 80
+
+# Pornește Nginx
+CMD ["nginx", "-g", "daemon off;"]

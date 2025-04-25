@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ia-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ia-frontend
+  template:
+    metadata:
+      labels:
+        app: ia-frontend
+    spec:
+      containers:
+      - name: ia-frontend
+        image: floreagabriel/ia-frontend
+        ports:
+        - containerPort: 80

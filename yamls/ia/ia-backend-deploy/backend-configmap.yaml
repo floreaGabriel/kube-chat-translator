@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ia-backend-config
+data:
+  container-name: "audio-files"
+  speech-region: "canadacentral"

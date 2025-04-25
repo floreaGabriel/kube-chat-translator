@@ -77,7 +77,7 @@ const UploadForm = ({ onUploadSuccess }) => {
 
     try {
       // Trimitem cererea de upload către backend
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/translation`, {
+      const response = await fetch(`/api/translation`, {
         method: 'POST',
         body: formData,
       });

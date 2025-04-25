@@ -26,7 +26,7 @@ function App() {
 
   // Funcție pentru a verifica statusul unei traduceri
   const checkTranslationStatus = (requestId) => {
-    fetch(`${process.env.REACT_APP_API_URL}/translation/${requestId}`)
+    fetch(`/api/translation/${requestId}`)
       .then(response => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -64,7 +64,7 @@ function App() {
 
   // Handler pentru a selecta o traducere din istoric
   const handleSelectTranslation = (requestId) => {
-    fetch(`${process.env.REACT_APP_API_URL}/translation/${requestId}`)
+    fetch(`/api/translation/${requestId}`)
       .then(response => response.json())
       .then(data => {
         setTranslationResult(data);

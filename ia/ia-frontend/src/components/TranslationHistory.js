@@ -18,7 +18,7 @@ const TranslationHistory = ({ onSelectTranslation }) => {
     setError(null);
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/History?page=${page}&pageSize=${pageSize}`);
+      const response = await fetch(`/api/History?page=${page}&pageSize=${pageSize}`);
       
       if (!response.ok) {
         throw new Error(`Eroare HTTP: ${response.status}`);

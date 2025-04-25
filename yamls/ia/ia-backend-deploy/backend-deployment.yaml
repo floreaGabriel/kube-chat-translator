@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ia-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ia-backend
+  template:
+    metadata:
+      labels:
+        app: ia-backend
+    spec:
+      containers:
+      - name: ia-backend
+        image: floreagabriel/ia-backend
+        ports:
+        - containerPort: 80
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Development"
+        - name: ASPNETCORE_URLS
+          value: "http://+:5090"
+        - name: ConnectionStrings__DefaultConnection
+          valueFrom:
+            secretKeyRef:
+              name: ia-backend-secrets
+              key: connection-string
+        - name: AzureBlobStorage__ConnectionString
+          valueFrom:
+            secretKeyRef:
+              name: ia-backend-secrets
+              key: blob-connection-string
+        - name: AzureBlobStorage__ContainerName
+          valueFrom:
+            configMapKeyRef:
+              name: ia-backend-config
+              key: container-name
+        - name: AzureSpeechService__SubscriptionKey
+          valueFrom:
+            secretKeyRef:
+              name: ia-backend-secrets
+              key: speech-key
+        - name: AzureSpeechService__Region
+          valueFrom:
+            configMapKeyRef:
+              name: ia-backend-config
+              key: speech-region
