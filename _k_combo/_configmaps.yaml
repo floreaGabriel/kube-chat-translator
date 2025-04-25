@@ -1,0 +1,39 @@
+# CHAT_BACKEND
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: chat-backend-config
+data:
+  MongoDbSettings__DatabaseName: "ChatDb"
+  MongoDbSettings__MessagesCollectionName: "Messages"
+  ASPNETCORE_URLS: "http://+:80"
+
+---
+
+# MYSQL_JOOMLA
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config
+data:
+  MYSQL_ROOT_PASSWORD: parola_root
+  MYSQL_DATABASE : pizzeria_db
+  MYSQL_USER : joomla
+  MYSQL_PASSWORD : parola_joomla
+
+---
+
+# IA_BACKEND
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ia-backend-config
+data:
+  container-name: "audio-files"
+  speech-region: "canadacentral"
+
+
+

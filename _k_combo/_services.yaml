@@ -1,0 +1,115 @@
+# CHAT_BACKEND 
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: chat-backend-service
+spec:
+  selector:
+    app: chat-backend
+  ports:
+  - port: 88
+    targetPort: 80
+    nodePort: 30088
+  type: NodePort
+
+--- 
+
+# CHAT_FRONTEND
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: chat-frontend-service
+spec:
+  selector:
+    app: chat-frontend
+  ports:
+  - port: 90
+    targetPort: 90
+    nodePort: 30090
+  type: NodePort
+
+---
+
+# MONGO_CHAT
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-service
+spec: 
+  selector:
+    app: mongodb
+  ports:
+  - port: 27017
+    targetPort: 27017
+  type: ClusterIP
+
+---
+
+# JOOMLA
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: joomla-service
+spec:
+  selector:
+    app: joomla
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30627
+  type: NodePort
+
+---
+
+# MYSQL_JOOMLA
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+spec:
+  selector:
+    app: mysql-joomla
+  ports:
+  - port: 3306
+    targetPort: 3306
+  type: ClusterIP
+
+---
+
+# IA_BACKEND
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ia-backend-service
+spec:
+  selector:
+    app: ia-backend
+  ports:
+  - port: 8080
+    targetPort: 80
+  type: ClusterIP
+
+
+---
+
+# IA_FRONTEND
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ia-frontend-service
+spec:
+  selector:
+    app: ia-frontend
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30300
+  type: NodePort

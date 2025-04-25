@@ -1,0 +1,274 @@
+# CHAT_BACKEND
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chat-backend
+  template:
+    metadata:
+      labels:
+        app: chat-backend
+    spec:
+      containers:
+      - name: chat-backend
+        image: floreagabriel/chat-backend
+        ports:
+        - containerPort: 80  # Nginx expune portul 80, aplicația .NET rulează pe 5000 intern
+        env:
+        - name: MongoDbSettings__ConnectionString
+          value: mongodb://mongodb-service:27017
+        - name: ASPNETCORE_URLS
+          value: http://+:5000  # Aplicația .NET rulează pe portul 5000 intern
+
+---
+
+# CHAT_FRONTEND
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chat-frontend
+  template:
+    metadata:
+      labels:
+        app: chat-frontend
+    spec:
+      containers:
+      - name: chat-frontend
+        image: floreagabriel/chat-frontend
+        ports:
+        - containerPort: 90
+        
+        env: 
+        - name: REACT_APP_API_URL
+          value: "http://192.168.65.3:30088"
+        - name: REACT_APP_SIGNALR_HUB_URL
+          value: "http://192.168.65.3:30088/chatHub"
+        - name: PORT
+          value: "90"
+
+---
+
+# MONGO_DB_CHAT
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb
+spec:
+  selector:
+    matchLabels:
+      app: mongodb
+  serviceName: "mongodb-service"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: mongo:latest
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+        - name: mongodb-data
+          mountPath: /data/db
+  volumeClaimTemplates:
+  - metadata:
+      name: mongodb-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
+
+---
+
+# JOOMLA 
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: joomla
+  labels:
+    app: joomla
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: joomla
+  template:
+    metadata:
+      labels:
+        app: joomla
+    spec:
+      containers:
+        - name: joomla
+          image: floreagabriel/joomla:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: JOOMLA_DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: JOOMLA_DB_HOST
+
+            - name: JOOMLA_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: JOOMLA_DB_PASSWORD
+
+            - name: JOOMLA_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: JOOMLA_DB_USER
+
+            - name: JOOMLA_DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: JOOMLA_DB_NAME
+
+            - name: JOOMLA_DB_TYPE
+              value: "mysqli"
+
+---
+
+# MYSQL JOOMLA
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-joomla
+spec:
+  selector:
+    matchLabels:
+      app: mysql-joomla
+  template:
+    metadata:
+      labels:
+        app: mysql-joomla
+    spec:
+      containers:
+      - name: mysql-joomla
+        image: floreagabriel/mysql-joomla:latest
+        ports:
+        - containerPort: 3306
+
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: mysql-config
+                key: MYSQL_ROOT_PASSWORD
+
+          - name: MYSQL_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: mysql-config
+                key: MYSQL_DATABASE
+
+          - name: MYSQL_USER
+            valueFrom:
+              configMapKeyRef:
+                name: mysql-config
+                key: MYSQL_USER
+                
+
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: mysql-config
+                key: MYSQL_PASSWORD
+
+
+---
+
+# IA_BACKEND
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ia-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ia-backend
+  template:
+    metadata:
+      labels:
+        app: ia-backend
+    spec:
+      containers:
+      - name: ia-backend
+        image: floreagabriel/ia-backend
+        ports:
+        - containerPort: 80
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Development"
+        - name: ASPNETCORE_URLS
+          value: "http://+:5090"
+        - name: ConnectionStrings__DefaultConnection
+          valueFrom:
+            secretKeyRef:
+              name: ia-backend-secrets
+              key: connection-string
+        - name: AzureBlobStorage__ConnectionString
+          valueFrom:
+            secretKeyRef:
+              name: ia-backend-secrets
+              key: blob-connection-string
+        - name: AzureBlobStorage__ContainerName
+          valueFrom:
+            configMapKeyRef:
+              name: ia-backend-config
+              key: container-name
+        - name: AzureSpeechService__SubscriptionKey
+          valueFrom:
+            secretKeyRef:
+              name: ia-backend-secrets
+              key: speech-key
+        - name: AzureSpeechService__Region
+          valueFrom:
+            configMapKeyRef:
+              name: ia-backend-config
+              key: speech-region
+
+---
+
+# IA_FRONTEND
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ia-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ia-frontend
+  template:
+    metadata:
+      labels:
+        app: ia-frontend
+    spec:
+      containers:
+      - name: ia-frontend
+        image: floreagabriel/ia-frontend
+        ports:
+        - containerPort: 80
