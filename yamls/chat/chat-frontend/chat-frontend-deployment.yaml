@@ -17,9 +17,12 @@ spec:
         image: floreagabriel/chat-frontend
         ports:
         - containerPort: 90
+        
         env: 
         - name: REACT_APP_API_URL
-          value: "http://localhost:30088"
+          value: "http://192.168.65.3:30088"
         - name: REACT_APP_SIGNALR_HUB_URL
-          value: "http://localhost:30088/chatHub"
+          value: "http://192.168.65.3:30088/chatHub"
+        - name: PORT
+          value: "90"
 

@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: chat-backend
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: chat-backend
@@ -16,26 +16,10 @@ spec:
       - name: chat-backend
         image: floreagabriel/chat-backend
         ports:
-        - containerPort: 80
+        - containerPort: 80  # Nginx expune portul 80, aplicația .NET rulează pe 5000 intern
         env:
         - name: MongoDbSettings__ConnectionString
-          valueFrom:
-            secretKeyRef: 
-              name: mongodb-credentials
-              key: connection_string
-        - name: MongoDbSettings__DatabaseName
-          valueFrom:
-            configMapKeyRef:
-              name: chat-backend-config
-              key: MongoDbSettings__DatabaseName
-        - name: MongoDbSettings__MessagesCollectionName
-          valueFrom:
-            configMapKeyRef:
-              name: chat-backend-config
-              key: MongoDbSettings__MessagesCollectionName
+          value: mongodb://mongodb-service:27017
         - name: ASPNETCORE_URLS
-          valueFrom:
-            configMapKeyRef: 
-              name: chat-backend-config
-              key: ASPNETCORE_URLS
-      
+          value: http://+:5000  # Aplicația .NET rulează pe portul 5000 intern
+

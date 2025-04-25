@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
+using System;
 
 
 namespace chat_backend;
@@ -40,7 +41,11 @@ public class Startup {
         
         // aduagare signalR
 
-        services.AddSignalR();
+        services.AddSignalR(options => {
+            options.EnableDetailedErrors = true;
+            options.ClientTimeoutInterval = TimeSpan.FromMinutes(2);
+            options.KeepAliveInterval = TimeSpan.FromMinutes(1);
+        });
 
         // aduagare controllers
         services.AddControllers();

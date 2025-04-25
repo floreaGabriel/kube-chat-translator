@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  ia-backend:
+    build:
+      context: ./ia-backend
+      dockerfile: Dockerfile
+    container_name: ia-backend
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5090
+      - ConnectionStrings__DefaultConnection=${CONN_STRING}
+      - AzureBlobStorage__ConnectionString=${BLOB_CONNECTION}
+      - AzureBlobStorage__ContainerName=${CONTAINER_NAME}
+      - AzureSpeechService__SubscriptionKey=${KEY1}
+      - AzureSpeechService__Region=${REGION}
+    ports:
+      - "8080:80"  # Expunem portul 8080 pentru Apache proxy
+    networks:
+      - ia-network
+    restart: unless-stopped
+  
+  ia-frontend:
+    build:
+      context: ./ia-frontend
+      dockerfile: Dockerfile
+    container_name: ia-frontend
+    environment:
+      - REACT_APP_API_URL=http://localhost:8080/api
+    ports:
+      - "3000:3000"  # Expunem portul pentru dezvoltare React
+    networks:
+      - ia-network
+    restart: unless-stopped
+
+networks:
+  ia-network:
+    driver: bridge

@@ -22,10 +22,12 @@ builder.Services.AddScoped<DatabaseService>();
 
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowAll", builder => 
-        builder.WithOrigins(
-            "http://localhost:3000"
-        ).AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+        builder.SetIsOriginAllowed(_ => true) // Allow any origin in development/testing
+               .AllowAnyHeader()
+               .AllowAnyMethod()
+               .AllowCredentials());
 });
+
 
 var app = builder.Build();
 

@@ -1,0 +1,36 @@
+# Directoare și fișiere de dezvoltare
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Fișiere de versionare
+.git
+.gitignore
+
+# Fișiere de mediu
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Fișiere de test
+coverage
+.nyc_output
+
+# Fișiere și directoare specifice IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Directoare de build
+/build
+/dist
+
+# Alte fișiere care nu sunt necesare în container
+README.md
+docker-compose.yml
+Dockerfile*
+*.log

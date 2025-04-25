@@ -18,13 +18,14 @@ const TranslationHistory = ({ onSelectTranslation }) => {
     setError(null);
 
     try {
-      const response = await fetch(`http://localhost:5090/api/History?page=${page}&pageSize=${pageSize}`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/History?page=${page}&pageSize=${pageSize}`);
       
       if (!response.ok) {
         throw new Error(`Eroare HTTP: ${response.status}`);
       }
       
       const data = await response.json();
+      console.log("Data: ", data);
       setTranslations(data);
     } catch (error) {
       console.error('Eroare la încărcarea istoricului:', error);

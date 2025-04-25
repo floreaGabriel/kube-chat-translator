@@ -2,25 +2,21 @@ import React, { useState, useEffect, useRef } from 'react';
 import * as signalR from '@microsoft/signalr';
 import './ChatComponent.css';
 
-const getBaseUrl = () => {
-  const { protocol, hostname } = window.location;
-  // Presupunem că NodePort-ul pentru chat-nginx-service este 30088
-  return `${protocol}//${hostname}:30088`;
-};
 
 const ChatComponent = () => {
 
     // obtine usernameul din url
-  const getUrlUsername = () => {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('username');
-  };
+    const getBaseUrl = () => {
+      const { protocol, hostname } = window.location;
+      // Folosim nodePort corect
+      return `${protocol}//${hostname.includes('localhost') ? 'localhost' : '192.168.65.3'}:30088`;
+    };
+    
+    const apiUrl = getBaseUrl();
+    const hubUrl = `${getBaseUrl()}/chatHub`;
 
-  const hubUrl = `${getBaseUrl()}/chatHub`; // În loc de process.env.REACT_APP_SIGNALR_HUB_URL
-  const apiUrl = `${getBaseUrl()}`; // În loc de process.env.REACT_APP_API_URL
-
-  const [username, setUsername] = useState( getUrlUsername() || '');
-  const [usernameFromUrl, setUsernameFromUrl] = useState(!!getUrlUsername() || '');
+  const [username, setUsername] = useState('');
+  const [usernameFromUrl, setUsernameFromUrl] = useState('');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [connection, setConnection] = useState(null);

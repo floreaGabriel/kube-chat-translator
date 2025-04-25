@@ -6,6 +6,7 @@ spec:
   selector:
     app: chat-backend
   ports:
-  - port: 80
+  - port: 88
     targetPort: 80
-  type: ClusterIP
+    nodePort: 30088
+  type: NodePort

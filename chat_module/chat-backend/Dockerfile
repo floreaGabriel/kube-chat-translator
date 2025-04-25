@@ -18,7 +18,23 @@ RUN dotnet publish "chat-backend.csproj" -c Release -o /app/publish /p:UseAppHos
 
 # Runtime final
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS final
+
+# Instalare Nginx
+RUN apt-get update && apt-get install -y nginx
+
+# Configurare aplicație .NET Core
 WORKDIR /app
 COPY --from=publish /app/publish .
-EXPOSE 80
-ENTRYPOINT ["dotnet", "chat-backend.dll"]
+
+# Configurare Nginx
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Script de pornire
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
+# Expunere porturi (backend pe 80 intern, Nginx pe 88 extern)
+EXPOSE 80 88
+
+# Utilizare script pentru pornirea ambelor servicii
+ENTRYPOINT ["/start.sh"]
