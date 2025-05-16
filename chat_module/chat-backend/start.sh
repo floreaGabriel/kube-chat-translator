@@ -4,7 +4,7 @@
 export ASPNETCORE_URLS=http://+:5000
 
 # Pornire server Nginx în background
-nginx
+ nginx
 
 # Pornire aplicație .NET Core
 dotnet chat-backend.dll

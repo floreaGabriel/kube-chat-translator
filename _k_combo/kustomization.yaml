@@ -3,4 +3,3 @@ resources:
   - _services.yaml
   - _configmaps.yaml
   - _secrets.yaml
-

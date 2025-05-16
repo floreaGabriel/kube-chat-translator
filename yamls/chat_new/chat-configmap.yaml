@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: chat-config
+data:
+  BACKEND_URL: "http://chat-backend-service:88"
+  REDIS_URL: "redis-service:6379"

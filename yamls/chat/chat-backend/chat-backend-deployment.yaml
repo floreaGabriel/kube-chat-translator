@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: chat-backend
 spec:
-  replicas: 1
+  replicas: 10
   selector:
     matchLabels:
       app: chat-backend

@@ -5,15 +5,15 @@ import './ChatComponent.css';
 
 const ChatComponent = () => {
 
-    // obtine usernameul din url
-    const getBaseUrl = () => {
-      const { protocol, hostname } = window.location;
-      // Folosim nodePort corect
-      return `${protocol}//${hostname.includes('localhost') ? 'localhost' : '192.168.65.3'}:30088`;
-    };
+    // // obtine usernameul din url
+    // const getBaseUrl = () => {
+    //   const { protocol, hostname } = window.location;
+    //   // Folosim nodePort corect
+    //   return `${protocol}//${hostname.includes('localhost') ? 'localhost' : '192.168.65.3'}:30088`;
+    // };
     
-    const apiUrl = getBaseUrl();
-    const hubUrl = `${getBaseUrl()}/chatHub`;
+  const apiUrl =  '/api/chat';// getBaseUrl(); // http://localhost:30090
+  const hubUrl = '/api/chatHub';
 
   const [username, setUsername] = useState('');
   const [usernameFromUrl, setUsernameFromUrl] = useState('');
@@ -71,7 +71,7 @@ const ChatComponent = () => {
   // Obține mesajele existente de la API
   const fetchMessages = async () => {
     try {
-      const response = await fetch(`${apiUrl}/api/chat`);
+      const response = await fetch(apiUrl);
       const data = await response.json();
       const formattedMessages = data.map(msg => ({
         username: msg.username,

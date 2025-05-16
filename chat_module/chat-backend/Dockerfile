@@ -34,7 +34,8 @@ COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
 # Expunere porturi (backend pe 80 intern, Nginx pe 88 extern)
-EXPOSE 80 88
+ EXPOSE 80 88
+#EXPOSE 5000
 
 # Utilizare script pentru pornirea ambelor servicii
 ENTRYPOINT ["/start.sh"]

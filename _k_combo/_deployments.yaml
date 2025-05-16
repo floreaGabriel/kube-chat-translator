@@ -1,10 +1,37 @@
 # CHAT_BACKEND
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: chat-backend
+# spec:
+#   replicas: 10
+#   selector:
+#     matchLabels:
+#       app: chat-backend
+#   template:
+#     metadata:
+#       labels:
+#         app: chat-backend
+#     spec:
+#       containers:
+#       - name: chat-backend
+#         image: floreagabriel/chat-backend:v4
+#         ports:
+#         - containerPort: 80  # Nginx expune portul 80, aplicația .NET rulează pe 5000 intern
+#         env:
+#         - name: MongoDbSettings__ConnectionString
+#           value: mongodb://mongodb-service:27017
+#         - name: ASPNETCORE_URLS
+#           value: http://+:5000  # Aplicația .NET rulează pe portul 5000 intern
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: chat-backend
+  name: chat-backend-deployment
+  labels:
+    app: chat-backend
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: chat-backend
@@ -15,23 +42,75 @@ spec:
     spec:
       containers:
       - name: chat-backend
-        image: floreagabriel/chat-backend
+        image: floreagabriel/chat-backend:new10
         ports:
-        - containerPort: 80  # Nginx expune portul 80, aplicația .NET rulează pe 5000 intern
+        - containerPort: 80
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
         env:
-        - name: MongoDbSettings__ConnectionString
-          value: mongodb://mongodb-service:27017
-        - name: ASPNETCORE_URLS
-          value: http://+:5000  # Aplicația .NET rulează pe portul 5000 intern
-
+        - name: Redis__ConnectionString
+          valueFrom:
+            configMapKeyRef:
+              name: chat-config
+              key: REDIS_URL
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Development"  # Pentru a permite CORS
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 20
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 5
 ---
 
 # CHAT_FRONTEND
 
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: chat-frontend
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: chat-frontend
+#   template:
+#     metadata:
+#       labels:
+#         app: chat-frontend
+#     spec:
+#       containers:
+#       - name: chat-frontend
+#         image: floreagabriel/chat-frontend:v4
+#         ports:
+#         - containerPort: 90
+        
+#         env: 
+#         - name: REACT_APP_API_URL
+#           value: "http://chat-backend-service:80/api"
+#         - name: REACT_APP_SIGNALR_HUB_URL
+#           value: "http://chat-backend-service:80/chatHub"
+#         - name: PORT
+#           value: "90"
+
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: chat-frontend
+  name: chat-frontend-deployment
+  labels:
+    app: chat-frontend
 spec:
   replicas: 1
   selector:
@@ -44,55 +123,93 @@ spec:
     spec:
       containers:
       - name: chat-frontend
-        image: floreagabriel/chat-frontend
+        image: floreagabriel/chat-frontend:new10
         ports:
-        - containerPort: 90
-        
-        env: 
+        - containerPort: 80
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+        env:
         - name: REACT_APP_API_URL
-          value: "http://192.168.65.3:30088"
-        - name: REACT_APP_SIGNALR_HUB_URL
-          value: "http://192.168.65.3:30088/chatHub"
-        - name: PORT
-          value: "90"
+          valueFrom:
+            configMapKeyRef:
+              name: chat-config
+              key: BACKEND_URL
+---
+
+# REDIS
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+  labels:
+    app: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:alpine
+        ports:
+        - containerPort: 6379
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+
 
 ---
 
 # MONGO_DB_CHAT
 
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: mongodb
-spec:
-  selector:
-    matchLabels:
-      app: mongodb
-  serviceName: "mongodb-service"
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: mongodb
-    spec:
-      containers:
-      - name: mongodb
-        image: mongo:latest
-        ports:
-        - containerPort: 27017
-        volumeMounts:
-        - name: mongodb-data
-          mountPath: /data/db
-  volumeClaimTemplates:
-  - metadata:
-      name: mongodb-data
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 1Gi
+# apiVersion: apps/v1
+# kind: StatefulSet
+# metadata:
+#   name: mongodb
+# spec:
+#   selector:
+#     matchLabels:
+#       app: mongodb
+#   serviceName: "mongodb-service"
+#   replicas: 1
+#   template:
+#     metadata:
+#       labels:
+#         app: mongodb
+#     spec:
+#       containers:
+#       - name: mongodb
+#         image: mongo:latest
+#         ports:
+#         - containerPort: 27017
+#         volumeMounts:
+#         - name: mongodb-data
+#           mountPath: /data/db
+#   volumeClaimTemplates:
+#   - metadata:
+#       name: mongodb-data
+#     spec:
+#       accessModes: [ "ReadWriteOnce" ]
+#       resources:
+#         requests:
+#           storage: 1Gi
 
----
+# ---
 
 # JOOMLA 
 
@@ -114,7 +231,7 @@ spec:
     spec:
       containers:
         - name: joomla
-          image: floreagabriel/joomla:latest
+          image: floreagabriel/joomla:final
           ports:
             - containerPort: 80
           env:
@@ -144,7 +261,14 @@ spec:
 
             - name: JOOMLA_DB_TYPE
               value: "mysqli"
+      #     volumeMounts:
+      #       - name: joomla-data
+      #         mountPath: /var/www/html
 
+      # volumes:
+      #   - name: joomla-data
+      #     persistentVolumeClaim:
+      #       claimName: joomla-pvc
 ---
 
 # MYSQL JOOMLA
@@ -164,7 +288,7 @@ spec:
     spec:
       containers:
       - name: mysql-joomla
-        image: floreagabriel/mysql-joomla:latest
+        image: floreagabriel/mysql-joomla:final
         ports:
         - containerPort: 3306
 

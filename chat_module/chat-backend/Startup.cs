@@ -60,12 +60,13 @@ public class Startup {
         app.UseRouting();
 
         // activate cors
-
+        app.UseWebSockets();
+        
         app.UseCors("CorsPolicy");
 
         app.UseEndpoints(endpoints => {
             endpoints.MapControllers();
-            endpoints.MapHub<ChatHub>("/chatHub"); // endpoint pentru hubul signalR
+            endpoints.MapHub<ChatHub>("/api/chatHub"); // endpoint pentru hubul signalR
         });
     }
 }

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: joomla
-          image: floreagabriel/joomla:latest
+          image: floreagabriel/joomla:v1
           ports:
             - containerPort: 80
           env:
@@ -46,3 +46,11 @@ spec:
 
             - name: JOOMLA_DB_TYPE
               value: "mysqli"
+      #     volumeMounts:
+      #       - name: joomla-data
+      #         mountPath: /var/www/html
+
+      # volumes:
+      #   - name: joomla-data
+      #     persistentVolumeClaim:
+      #       claimName: joomla-pvc

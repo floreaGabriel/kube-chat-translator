@@ -1,21 +1,47 @@
 # CHAT_BACKEND 
 
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: chat-backend-service
+# spec:
+#   selector:
+#     app: chat-backend
+#   ports:
+#   - port: 88
+#     targetPort: 80
+#   type: ClusterIP
+
 apiVersion: v1
 kind: Service
 metadata:
   name: chat-backend-service
+  annotations:
+    service.alpha.kubernetes.io/app-protocols: '{"http":"WS"}'
 spec:
   selector:
     app: chat-backend
   ports:
   - port: 88
     targetPort: 80
-    nodePort: 30088
-  type: NodePort
-
+    name: http
+  type: ClusterIP
 --- 
 
 # CHAT_FRONTEND
+
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: chat-frontend-service
+# spec:
+#   selector:
+#     app: chat-frontend
+#   ports:
+#   - port: 90
+#     targetPort: 90
+#     nodePort: 30090
+#   type: NodePort
 
 apiVersion: v1
 kind: Service
@@ -26,28 +52,42 @@ spec:
     app: chat-frontend
   ports:
   - port: 90
-    targetPort: 90
+    targetPort: 80
     nodePort: 30090
   type: NodePort
 
 ---
 
-# MONGO_CHAT
-
-
+# REDIS SERVICE
 apiVersion: v1
 kind: Service
 metadata:
-  name: mongodb-service
-spec: 
+  name: redis-service
+spec:
   selector:
-    app: mongodb
+    app: redis
   ports:
-  - port: 27017
-    targetPort: 27017
+  - port: 6379
+    targetPort: 6379
   type: ClusterIP
 
 ---
+# MONGO_CHAT
+
+
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: mongodb-service
+# spec: 
+#   selector:
+#     app: mongodb
+#   ports:
+#   - port: 27017
+#     targetPort: 27017
+#   type: ClusterIP
+
+# ---
 
 # JOOMLA
 
