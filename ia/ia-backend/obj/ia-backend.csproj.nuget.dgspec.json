@@ -1,0 +1,93 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/gabrielflorea/Desktop/anul3/STD/proiect-kubernetes/ia/ia-backend/ia-backend.csproj": {}
+  },
+  "projects": {
+    "/Users/gabrielflorea/Desktop/anul3/STD/proiect-kubernetes/ia/ia-backend/ia-backend.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/gabrielflorea/Desktop/anul3/STD/proiect-kubernetes/ia/ia-backend/ia-backend.csproj",
+        "projectName": "ia-backend",
+        "projectPath": "/Users/gabrielflorea/Desktop/anul3/STD/proiect-kubernetes/ia/ia-backend/ia-backend.csproj",
+        "packagesPath": "/Users/gabrielflorea/.nuget/packages/",
+        "outputPath": "/Users/gabrielflorea/Desktop/anul3/STD/proiect-kubernetes/ia/ia-backend/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/gabrielflorea/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "/usr/local/share/dotnet/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Azure.Storage.Blobs": {
+              "target": "Package",
+              "version": "[12.24.0, )"
+            },
+            "Microsoft.CognitiveServices.Speech": {
+              "target": "Package",
+              "version": "[1.43.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
+            "Microsoft.Extensions.Azure": {
+              "target": "Package",
+              "version": "[1.11.0, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.2.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.203/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

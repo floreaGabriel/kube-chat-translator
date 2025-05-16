@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "bv9s4e5j31+psIvi4fzvhORO3vQBFlyHXG5EJtxzjBA=",
+  "Source": "ia-backend",
+  "BasePath": "_content/ia-backend",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

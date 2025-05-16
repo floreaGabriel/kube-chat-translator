@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "dgSpecHash": "So9XeqRgEkQ=",
+  "success": true,
+  "projectFilePath": "/Users/gabrielflorea/Desktop/anul3/STD/proiect-kubernetes/chat/ChatBackend/ChatBackend.csproj",
+  "expectedPackageFiles": [
+    "/Users/gabrielflorea/.nuget/packages/microsoft.extensions.logging.abstractions/6.0.0/microsoft.extensions.logging.abstractions.6.0.0.nupkg.sha512",
+    "/Users/gabrielflorea/.nuget/packages/pipelines.sockets.unofficial/2.2.8/pipelines.sockets.unofficial.2.2.8.nupkg.sha512",
+    "/Users/gabrielflorea/.nuget/packages/stackexchange.redis/2.8.37/stackexchange.redis.2.8.37.nupkg.sha512",
+    "/Users/gabrielflorea/.nuget/packages/system.io.pipelines/5.0.1/system.io.pipelines.5.0.1.nupkg.sha512",
+    "/Users/gabrielflorea/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.15/microsoft.aspnetcore.app.ref.8.0.15.nupkg.sha512",
+    "/Users/gabrielflorea/.nuget/packages/microsoft.netcore.app.host.osx-arm64/8.0.15/microsoft.netcore.app.host.osx-arm64.8.0.15.nupkg.sha512",
+    "/Users/gabrielflorea/.nuget/packages/microsoft.netcore.app.ref/8.0.15/microsoft.netcore.app.ref.8.0.15.nupkg.sha512"
+  ],
+  "logs": []
+}
