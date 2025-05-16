@@ -1,80 +1,157 @@
-# PLAN-IMPLEMENTARE
+# Kubernetes Multi-Component Web Application
 
-Scopul acestei teme este de a implementa, folosindu-va de Kubernetes si de diferite tehnologii pentru backend, baze de date si frontend, un site web ce contine un chat si o componenta ce va permite folosirea unei tehnologii de IA pusa la dispozitie de Azure.
+A comprehensive web platform deployed on Kubernetes, featuring a content management system, real-time chat application, and AI-powered features.
 
-## CERINTE INITIALE
+## 🌟 Project Overview
 
-1. **Arhitectura** :
+This project demonstrates a microservices architecture deployed on Kubernetes. It consists of three main components:
 
--   *CMS(JOOMLA)*: Un site web simplu cu 6 replici, expus pe portul 80, cu o baza de date proprie
--   *CHAT*: 
-    - Backend: .NET + NGINX cu 3 replici, expus pe portul 88
-    - Frontend: React cu 1 replica, expus pe portul 90
--   *Aplicatie IA*: 
-    - Frontend: React cu 1 replica
-    - Procesare cu Azure Speech Translation 
-    - Stocare fisier in Blob Azure Storage 
-    - Date in SQL Database
+1. **Content Management System (Joomla)** - A complete website with database backend
+2. **Real-time Chat System** - Featuring .NET Core backend and React frontend
+3. **AI Application** - Using Azure cognitive services for speech translation and data storage
 
-**Totul ruleaza pe kubernetes, cu fisiere .yaml de configurare**
+All components are containerized and orchestrated with Kubernetes, making the application scalable, resilient, and maintainable.
 
-## PASI DE IMPLEMENTARE ✅❌
-     
-      
+## 🏗️ Architecture
 
-### 1. Configurarea mediului de lucru 📌
+### CMS Component
+- **Frontend**: Joomla CMS with 6 replicas exposed on port 80
+- **Backend**: MySQL database for content storage
+- **Features**: Content management, templating, user management
 
-- Instalare Git: `brew install git`
-- Instalare Docker Desktop: Descarcat de pe site-ul oficial.
-- Instalare Minikube: `brew install minikube`
-- Instalare kubectl: `brew install kubectl`
+### Chat Component
+- **Frontend**: React application with 1 replica exposed on port 90
+- **Backend**: .NET Core with SignalR for real-time communication (3 replicas exposed on port 88)
+- **Database**: MongoDB for message storage
+- **Proxy**: NGINX for routing and load balancing
 
-### 2. Implementarea CMS-ului (Joomla) 📌
+### AI Component
+- **Frontend**: React application with 1 replica
+- **Services**: 
+  - Azure Speech Translation for audio processing
+  - Azure Blob Storage for file storage
+  - Azure SQL Database for data persistence
 
-- Joomla este un sistem de manageriere a contentului unui site web free. Joomla este scris in PHP si foloseste tehnici de programare orientata pe obiecte.
-- Ideea principala a web site-ului meu este o pizzerie *"Pizzeria la gabita"*
-- Pentru implementarea acestui CMS am realizat 2 componente individuale care comunica dependent una de alta. 
-- Am creat `Dockerfile.joomla` care identifica componenta unica de *joomla*.
-- Am creat `Dockerfile.mysql` care identifica componenta unica de mysql. *(Baza de date cu care comunica serviciul de joomla)*
-- Apoi pentru a le combina intr-un singur serviciu mare, am creat `docker-compose.yaml` in care am combinat aceste 2 servicii intr-o componenta unica de restul proiectului. Astfel pot administra mai usor aceasta *componenta* pentru a o duce in productie.
+## 🚀 Getting Started
 
-❗❗❗ Am creat o diagrama pentru a intelege fluxul de acum + ce urmeaza sa fac cu sistemul de chat: [CMS + CHAT diagram explenation](https://excalidraw.com/#json=gqDPGHmof0GB98HKgKOn1,Pykh11mpzHvlC_2jMmdGyA)
+### Prerequisites
 
-### 3. Implementarea chat-ului 📌
+- Docker Desktop
+- Minikube or other Kubernetes cluster
+- kubectl
+- Git
 
-- Sistemul de chat este o reprezentare simpla a unui *Chat Live*.
-- Backendul acestuia este realizat cu frameworkul `ASP.NET Core`, care este un framework modern, cross-platform pentru dezvoltarea de aplicatii web si API-uri.
-- Am folosit biblioteca **SignalR** pentru comunicarea in timp real. SignalR este o biblioteca care simplifica adaugarea functionalitatii in timp real in aplicatii web, permitand serverului sa trimita mesaje catre clienti instantaneu. SignalR foloseste in principal **WebSockets** pentru comunicarea bidirectionala, dar poate folosi si alte metode de transport (cum ar fi Server-Sent Events sau Long Polling) daca WebSockets nu este disponibil.
+### Installation
 
-#### Structura Backend (`chat-backend`)
-- **Hubs/ChatHub.cs**: Defineste `ChatHub`, un hub SignalR care gestioneaza comunicarea in timp real. In implementarea curenta, hub-ul trimite mesajele catre toti clientii conectati (`Clients.All.SendAsync`), creand un chat public.
-- **Controllers/ChatController.cs**: Un API controller care expune un endpoint (`GET /api/chat`) pentru a obtine mesajele existente din baza de date.
-- **Services/ChatService.cs**: Un serviciu care gestioneaza logica de business, inclusiv salvarea mesajelor in baza de date MongoDB.
-- **Models/**: Contine modelul `ChatMessage` pentru stocarea mesajelor (cu campuri precum `Username`, `Message`, `Timestamp`).
-- **Program.cs** si **Startup.cs**: Configureaza aplicatia ASP.NET Core, adauga SignalR, si seteaza dependintele (cum ar fi `ChatService`).
+1. Clone the repository:
+   ```bash
+   git clone [repository-url]
+   cd proiect-kubernetes
+   ```
 
-#### Baza de Date
-- Am folosit **MongoDB** ca baza de date pentru stocarea mesajelor. MongoDB este o baza de date NoSQL care stocheaza datele in format JSON-like (documente).
-- Conexiunea cu MongoDB este configurata in `docker-compose.yml` printr-un serviciu `mongodb`, iar aplicatia se conecteaza la acesta folosind connection string-ul `mongodb://mongodb:27017`.
+2. Start your Kubernetes cluster:
+   ```bash
+   minikube start
+   ```
 
-#### Structura Frontend (`chat-frontend`)
-- Frontendul este realizat cu **React** si este expus pe portul 90.
-- **src/components/ChatComponent.jsx**: Componenta principala care afiseaza mesajele, permite trimiterea de mesaje noi, si arata statusul conexiunii.
-- Frontendul comunica cu backendul prin:
-  - **SignalR**: Pentru comunicarea in timp real (trimiterea si primirea mesajelor).
-  - **HTTP**: Pentru a obtine mesajele existente prin apelarea endpoint-ului `/api/chat`.
+3. Deploy the CMS component:
+   ```bash
+   kubectl apply -f yamls/cms/
+   ```
 
-#### Configurare Docker
-- Am creat un `docker-compose.yml` care include:
-  - Serviciul `dotnet` pentru backend (port 5079 mapeaza la 5000).
-  - Serviciul `mongodb` pentru baza de date (port 27017).
-  - Serviciul `nginx` pentru reverse proxy (port 88).
-  - Serviciul `frontend` pentru React (port 90).
+4. Deploy the Chat component:
+   ```bash
+   kubectl apply -f yamls/chat/
+   ```
 
-❗❗❗ Am creat o diagrama pentru a reprezenta flow-ul sistemului de chat: 
-[Sistemul de chat Diagram](https://excalidraw.com/#json=5WR5QXd3570mrnS9FbAHo,NqAaYamSSlQM2May9txByQ)
+5. Deploy the AI component:
+   ```bash
+   kubectl apply -f yamls/ia/
+   ```
 
+6. Verify the deployments:
+   ```bash
+   kubectl get all
+   ```
 
-### 4. Implementarea aplicatiei IA 📌
-### 5. Configurare kubernetes 📌
-### 6. Testare 📌
+## 🔧 Component Details
+
+### CMS (Joomla)
+
+The CMS is based on Joomla, a PHP-based content management system. It's deployed with:
+
+- Custom Docker images for Joomla and MySQL
+- Persistent volume claims for database storage
+- Kubernetes secrets for sensitive configuration
+- Services and ingress for external access
+
+Access the CMS at: http://[cluster-ip]/
+
+### Chat System
+
+The chat system provides real-time communication capabilities:
+
+- **Backend**: Built with ASP.NET Core and SignalR for WebSocket communication
+- **Frontend**: React application with real-time message display
+- **Features**:
+  - Persistent message history
+  - Real-time message delivery
+  - User presence indication
+
+Access the chat interface at: http://[cluster-ip]:90/
+
+### AI Application
+
+The AI component leverages Azure services for speech processing:
+
+- Speech-to-text and translation capabilities
+- Secure storage of processed data
+- Integration with the main application
+
+## 🔍 Kubernetes Configuration
+
+The project uses various Kubernetes resources:
+
+- **Deployments**: For managing replica sets of pods
+- **Services**: For internal and external communication
+- **ConfigMaps**: For non-sensitive configuration
+- **Secrets**: For sensitive data like database credentials
+
+## 🛠️ Development and Deployment Workflow
+
+1. Develop and test components locally using Docker Compose
+2. Build and push Docker images to container registry
+3. Update Kubernetes YAML files with new image versions
+4. Apply changes to Kubernetes cluster
+5. Verify deployments and monitor performance
+
+## 📊 Monitoring and Maintenance
+
+- Use Kubernetes dashboard for cluster monitoring
+- Check logs with `kubectl logs [pod-name]`
+- Monitor pod health with `kubectl get pods`
+- Update deployments with `kubectl apply -f [updated-yaml]`
+
+## 🔒 Security Considerations
+
+- All sensitive information is stored in Kubernetes secrets
+- Network policies control inter-service communication
+- Services are exposed only through controlled endpoints
+- SSL/TLS encryption for external access
+
+## 🧪 Testing
+
+- Unit tests for each microservice
+- Integration tests for service interactions
+- End-to-end tests for user scenarios
+
+## 👥 Contributors
+
+- [Florea Cristian Gabriel]
+
+## 🙏 Acknowledgements
+
+- Kubernetes Community
+- Docker Community
+- Microsoft Azure
+- Joomla CMS
