@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: chat-backend-config
-data:
-  MongoDbSettings__DatabaseName: "ChatDb"
-  MongoDbSettings__MessagesCollectionName: "Messages"
-  ASPNETCORE_URLS: "http://+:80"
